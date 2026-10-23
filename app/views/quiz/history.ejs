@@ -1,47 +1,110 @@
-<%- include('../layouts/header', { title: 'Lịch sử làm bài' }) %>
+<%- include('../layouts/header', { title: 'Lịch sử làm bài thi' }) %>
 
 <div class="container">
-    <div class="page-header">
-        <h2>🕒 Lịch sử làm bài thi của bạn</h2>
-        <p class="subtitle">Danh sách các bài thi trắc nghiệm bạn đã hoàn thành</p>
+    <div class="page-header" style="margin-bottom: 1.5rem;">
+        <h1 style="font-size: 1.6rem; font-weight: 800; color: #0f172a;">Lịch sử làm bài thi của bạn</h1>
+        <p class="subtitle" style="color: #64748b; font-size: 0.9rem;">Hồ sơ lưu trữ toàn bộ các đợt thi trắc nghiệm trực tuyến đã hoàn thành</p>
     </div>
 
-    <div class="card">
-        <div class="card-body">
+    <% 
+        let totalAttempts = results.length;
+        let totalScoreSum = 0;
+        let maxScore = 0;
+        let passCount = 0;
+
+        results.forEach(r => {
+            let sc = Number(r.score) || 0;
+            totalScoreSum += sc;
+            if (sc > maxScore) maxScore = sc;
+            if (sc >= 5.0) passCount++;
+        });
+
+        let avgScore = totalAttempts > 0 ? (totalScoreSum / totalAttempts).toFixed(1) : 0;
+        let passRate = totalAttempts > 0 ? Math.round((passCount / totalAttempts) * 100) : 0;
+    %>
+
+    <!-- 4 Thẻ chỉ số tổng quan hồ sơ thi -->
+    <div class="history-stats-banner">
+        <div class="history-stat-card">
+            <span class="hstat-title">Số lần thi</span>
+            <div class="hstat-num"><%= totalAttempts %> <span style="font-size: 0.9rem; font-weight: 500; color: #64748b;">lượt</span></div>
+        </div>
+
+        <div class="history-stat-card">
+            <span class="hstat-title">Điểm trung bình</span>
+            <div class="hstat-num" style="color: #4f46e5;"><%= avgScore %> <span style="font-size: 0.9rem; font-weight: 500; color: #64748b;">/ 10</span></div>
+        </div>
+
+        <div class="history-stat-card">
+            <span class="hstat-title">Điểm cao nhất</span>
+            <div class="hstat-num" style="color: #059669;"><%= maxScore.toFixed(1) %> <span style="font-size: 0.9rem; font-weight: 500; color: #64748b;">/ 10</span></div>
+        </div>
+
+        <div class="history-stat-card">
+            <span class="hstat-title">Tỷ lệ hoàn thành</span>
+            <div class="hstat-num" style="color: #0284c7;"><%= passRate %>%</div>
+        </div>
+    </div>
+
+    <div class="card" style="border-radius: 14px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);">
+        <div class="card-body" style="padding: 0;">
             <% if (results.length === 0) { %>
-                <div class="empty-state">
-                    <p>Bạn chưa hoàn thành bài thi nào.</p>
-                    <a href="/quizzes" class="btn btn-primary">Khám phá danh sách đề thi</a>
+                <div class="empty-state" style="padding: 3.5rem 1rem; text-align: center;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.75rem;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <p style="font-size: 1rem; color: #475569; font-weight: 600;">Bạn chưa hoàn thành bài thi trắc nghiệm nào.</p>
+                    <a href="/quizzes" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Khám phá danh sách đề thi</a>
                 </div>
             <% } else { %>
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table-academic">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th style="width: 50px;">STT</th>
                                 <th>Tên đề thi</th>
                                 <th>Số câu đúng</th>
                                 <th>Điểm số</th>
-                                <th>Kết quả</th>
-                                <th>Thời gian nộp</th>
-                                <th>Hành động</th>
+                                <th>Đánh giá</th>
+                                <th>Thời gian nộp bài</th>
+                                <th style="text-align: right;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             <% results.forEach((r, idx) => { %>
                                 <tr>
-                                    <td><%= idx + 1 %></td>
-                                    <td><strong><%= r.quiz_title %></strong></td>
-                                    <td><%= r.correct_answers %> / <%= r.total_questions %></td>
-                                    <td><strong><%= r.score %> / 10</strong></td>
+                                    <td style="color: #64748b; font-weight: 600;"><%= idx + 1 %></td>
                                     <td>
-                                        <span class="score-badge <%= r.score >= 5 ? 'score-pass' : 'score-fail' %>">
-                                            <%= r.score >= 5 ? 'Đạt' : 'Chưa đạt' %>
-                                        </span>
+                                        <strong style="color: #0f172a; font-size: 0.98rem;"><%= r.quiz_title %></strong>
                                     </td>
-                                    <td><%= new Date(r.submitted_at).toLocaleString('vi-VN') %></td>
                                     <td>
-                                        <a href="/quizzes/results/<%= r.id %>" class="btn btn-xs btn-outline">Chi tiết</a>
+                                        <span style="font-weight: 700; color: #0f172a;"><%= r.correct_answers %></span> / <%= r.total_questions %>
+                                    </td>
+                                    <td>
+                                        <span style="font-size: 1.05rem; font-weight: 800; color: <%= r.score >= 5 ? '#059669' : '#dc2626' %>;">
+                                            <%= Number(r.score).toFixed(2) %>
+                                        </span>
+                                        <span style="font-size: 0.75rem; color: #94a3b8;">/ 10</span>
+                                    </td>
+                                    <td>
+                                        <% if (r.score >= 9.0) { %>
+                                            <span class="btn-fill-badge btn-fill-student">Xuất sắc</span>
+                                        <% } else if (r.score >= 7.0) { %>
+                                            <span class="btn-fill-badge btn-fill-teacher">Khá giỏi</span>
+                                        <% } else if (r.score >= 5.0) { %>
+                                            <span class="btn-fill-badge btn-fill-teacher">Đạt</span>
+                                        <% } else { %>
+                                            <span class="btn-fill-badge" style="background: #fef2f2; color: #b91c1c;">Chưa đạt</span>
+                                        <% } %>
+                                    </td>
+                                    <td style="font-family: Consolas, monospace; font-size: 0.85rem; color: #475569;">
+                                        <%= new Date(r.submitted_at).toLocaleString('vi-VN') %>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <a href="/quizzes/results/<%= r.id %>" class="btn btn-outline btn-sm" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                                            Xem chi tiết
+                                        </a>
                                     </td>
                                 </tr>
                             <% }) %>

@@ -1,44 +1,95 @@
-<%- include('../layouts/header', { title: 'Kết quả bài thi' }) %>
+<%- include('../layouts/header', { title: 'Kết quả bài thi - ' + result.quiz_title }) %>
 
 <div class="container container-sm">
-    <div class="result-card">
-        <div class="result-header">
-            <div class="result-icon <%= result.score >= 5 ? 'result-success' : 'result-fail' %>">
-                <%= result.score >= 5 ? '🎉' : '⚠️' %>
-            </div>
-            <h2>Kết quả làm bài thi</h2>
-            <p class="subtitle"><%= result.quiz_title %></p>
+    <div class="result-card-luxury">
+        <p class="result-card-subtitle">KẾT QUẢ BÀI THI TRẮC NGHIỆM</p>
+        <h1 class="result-quiz-name"><%= result.quiz_title %></h1>
+        <p class="result-candidate-info">
+            Thí sinh: <strong><%= result.fullname %></strong> (<%= result.email %>) &bull; Lượt thi: #<%= result.id %>
+        </p>
+
+        <!-- Đồng hồ vòng tròn hiển thị điểm số chuẩn hóa thang điểm 10 -->
+        <div class="score-circle-gauge <%= result.score >= 5 ? '' : 'fail' %>">
+            <span class="gauge-score-number"><%= Number(result.score).toFixed(2) %></span>
+            <span class="gauge-scale-label">Thang điểm 10</span>
         </div>
 
-        <div class="score-display">
-            <div class="score-main"><%= result.score %> <span class="score-max">/ 10</span></div>
-            <div class="score-status <%= result.score >= 5 ? 'text-success' : 'text-danger' %>">
-                <%= result.score >= 5 ? 'ĐẠT (PASSED)' : 'CHƯA ĐẠT (FAILED)' %>
+        <!-- Nhãn xếp loại năng lực học thuật -->
+        <div>
+            <% if (result.score >= 9.0) { %>
+                <div class="result-chip-rank rank-excellent">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    <span>XUẤT SẮC &bull; Bạn đã nắm vững toàn bộ kiến thức bài thi!</span>
+                </div>
+            <% } else if (result.score >= 7.0) { %>
+                <div class="result-chip-rank rank-excellent">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>KHÁ GIỎI &bull; Đạt kết quả tốt, hoàn thành mục tiêu học phần!</span>
+                </div>
+            <% } else if (result.score >= 5.0) { %>
+                <div class="result-chip-rank rank-excellent">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>ĐẠT YÊU CẦU &bull; Hoàn thành chuẩn đầu ra cơ bản!</span>
+                </div>
+            <% } else { %>
+                <div class="result-chip-rank rank-fail">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span>CHƯA ĐẠT &bull; Cần ôn tập và thực hiện lại bài thi!</span>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- 3 Thẻ thống kê thông số chi tiết -->
+        <div class="result-stats-grid">
+            <div class="result-stat-box">
+                <span class="stat-box-label">Tổng số câu hỏi</span>
+                <span class="stat-box-val"><%= result.total_questions %> câu</span>
+            </div>
+
+            <div class="result-stat-box">
+                <span class="stat-box-label">Số câu trả lời đúng</span>
+                <span class="stat-box-val" style="color: #059669;"><%= result.correct_answers %> / <%= result.total_questions %> câu</span>
+            </div>
+
+            <div class="result-stat-box">
+                <span class="stat-box-label">Thời gian nộp bài</span>
+                <span class="stat-box-val" style="font-size: 0.95rem; font-family: Consolas, monospace;">
+                    <%= new Date(result.submitted_at).toLocaleString('vi-VN') %>
+                </span>
             </div>
         </div>
 
-        <div class="result-details">
-            <div class="detail-row">
-                <span class="detail-label">Thí sinh:</span>
-                <span class="detail-val"><%= result.fullname %> (<%= result.email %>)</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Số câu trả lời đúng:</span>
-                <span class="detail-val"><strong><%= result.correct_answers %></strong> / <%= result.total_questions %> câu</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Tỷ lệ chính xác:</span>
-                <span class="detail-val"><strong><%= Math.round((result.correct_answers / result.total_questions) * 100) %>%</strong></span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Thời gian nộp bài:</span>
-                <span class="detail-val"><%= new Date(result.submitted_at).toLocaleString('vi-VN') %></span>
-            </div>
-        </div>
+        <!-- Nút hành động trực quan -->
+        <div class="result-actions-flex">
+            <a href="/quizzes/<%= result.quiz_id %>/take" class="btn btn-primary-gradient" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                <span>Làm lại bài thi</span>
+            </a>
 
-        <div class="result-actions">
-            <a href="/quizzes/<%= result.quiz_id %>/take" class="btn btn-outline">🔄 Làm lại bài thi</a>
-            <a href="/quizzes" class="btn btn-primary">📚 Danh sách đề thi</a>
+            <a href="/history" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>Lịch sử cá nhân</span>
+            </a>
+
+            <a href="/quizzes" class="btn btn-outline" style="text-decoration: none;">
+                Danh sách đề thi
+            </a>
         </div>
     </div>
 </div>
