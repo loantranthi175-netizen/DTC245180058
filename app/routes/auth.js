@@ -20,9 +20,13 @@ router.post('/login', async (req, res) => {
     }
 
     try {
-        const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email.trim()]);
+        const cleanInput = email.trim();
+        const [rows] = await pool.query(
+            'SELECT * FROM users WHERE email = ? OR email = ? OR email LIKE ?',
+            [cleanInput, `${cleanInput}@quiz.local`, `${cleanInput}@%`]
+        );
         if (rows.length === 0) {
-            return res.render('auth/login', { error: 'Email hoặc mật khẩu không chính xác.', success: null });
+            return res.render('auth/login', { error: 'Tài khoản hoặc mật khẩu không chính xác.', success: null });
         }
 
         const user = rows[0];
