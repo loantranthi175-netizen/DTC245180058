@@ -1,16 +1,20 @@
 -- Khởi tạo Database cho Hệ thống Quiz (Đề 35)
 -- Môn: Triển khai và Quản trị Hệ thống Phần mềm
+-- Sinh viên: DTC245180058
+
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
 
 CREATE DATABASE IF NOT EXISTS `quiz_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `quiz_db`;
 
--- 1. Bảng người dùng
+-- 1. Bảng người dùng (3 tác nhân: admin, teacher, candidate)
 CREATE TABLE IF NOT EXISTS `users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `email` VARCHAR(100) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     `fullname` VARCHAR(100) NOT NULL,
-    `role` ENUM('admin', 'candidate') DEFAULT 'candidate',
+    `role` ENUM('admin', 'teacher', 'candidate') DEFAULT 'candidate',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -52,24 +56,28 @@ CREATE TABLE IF NOT EXISTS `quiz_results` (
     CONSTRAINT `fk_result_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- SEED DỮ LIỆU MẪU
--- Mật khẩu Admin: Admin@123 (bcrypt hash)
--- Mật khẩu Thí sinh: Student@123 (bcrypt hash)
+-- ==============================================================================
+-- SEED DỮ LIỆU MẪU ĐẦY ĐỦ 3 TÁC NHÂN (Admin, Giáo viên, Sinh viên)
+-- ==============================================================================
+-- Admin: admin@quiz.local / Admin@123
+-- Giáo viên: teacher@quiz.local / Teacher@123
+-- Sinh viên: student@quiz.local / Student@123
 INSERT INTO `users` (`id`, `email`, `password`, `fullname`, `role`) VALUES
-(1, 'admin@quiz.local', '$2a$10$Mf7mia1Ow27ZEiApku3Vo.7s2OT3YeuZkFEhUidXriWzLxnc88Rym', 'Quản trị viên Hệ thống', 'admin'),
-(2, 'student@quiz.local', '$2a$10$mCfL2shWR2loMo4BKkY20eRdPitghFuNaIrtpvjtrWm7k6oCx2nTK', 'Nguyễn Văn Thí Sinh', 'candidate')
-ON DUPLICATE KEY UPDATE `email`=`email`;
+(1, 'admin@quiz.local', '$2a$10$hxSTRnTEjoEKw.qTSH.y.e6tdG3moOOhX6ABLWo0tZFJFL5XG0Qdu', 'Quản trị viên Hệ thống', 'admin'),
+(2, 'teacher@quiz.local', '$2a$10$9rmwCS3uQ4QwsViSlzCFiOtAG48BWuCQp64RU/9YEArKTmUurjp4W', 'Thầy Giáo Viên (Giảng viên)', 'teacher'),
+(3, 'student@quiz.local', '$2a$10$25W2aKt9ASHifQMdvAzfzOnHReAE.PZd/uWP8ycnQIKpGM9pxsm22', 'Nguyễn Văn Sinh Viên (DTC245180058)', 'candidate')
+ON DUPLICATE KEY UPDATE `password`=VALUES(`password`), `fullname`=VALUES(`fullname`), `role`=VALUES(`role`);
 
 -- Đề thi mẫu: Kiến thức Docker & DevOps Cơ bản (5 câu)
 INSERT INTO `quizzes` (`id`, `title`, `description`, `time_limit`, `created_by`) VALUES
-(1, 'Kiến thức Docker & DevOps Cơ bản', 'Bài kiểm tra đánh giá kiến thức cơ bản về container, Docker Compose, Nginx và hệ thống giám sát.', 15, 1)
-ON DUPLICATE KEY UPDATE `title`=`title`;
+(1, 'Kiến thức Docker & DevOps Cơ bản', 'Bài kiểm tra đánh giá kiến thức cơ bản về container, Docker Compose, Nginx và hệ thống giám sát.', 15, 2)
+ON DUPLICATE KEY UPDATE `title`=VALUES(`title`), `description`=VALUES(`description`);
 
--- 5 câu hỏi trắc nghiệm chuẩn
+-- 5 câu hỏi trắc nghiệm chuẩn tiếng Việt
 INSERT INTO `questions` (`id`, `quiz_id`, `content`, `option_a`, `option_b`, `option_c`, `option_d`, `correct_option`) VALUES
 (1, 1, 'Lệnh nào trong Docker CLI dùng để xây dựng một Docker Image từ Dockerfile?', 'docker run', 'docker build', 'docker compose', 'docker pull', 'B'),
 (2, 1, 'Tập tin cấu hình chuẩn nào được dùng để định nghĩa và chạy nhiều container cùng lúc?', 'Dockerfile', '.env', 'docker-compose.yml', 'nginx.conf', 'C'),
 (3, 1, 'Trong docker-compose.yml, chỉ thị nào dùng để gắn kết thư mục giữa máy host và container?', 'ports', 'volumes', 'environment', 'restart', 'B'),
 (4, 1, 'Vai trò chính của Nginx Reverse Proxy trong kiến trúc hệ thống là gì?', 'Thay thế hoàn toàn cơ sở dữ liệu', 'Định tuyến request, cân bằng tải, quản lý SSL/TLS và bảo mật', 'Tự động biên dịch mã nguồn Node.js', 'Lưu trữ dữ liệu dài hạn', 'B'),
 (5, 1, 'Thành phần nào thu thập các thông số tài nguyên (CPU, RAM, Network) từ container cho Prometheus?', 'mysqld-exporter', 'Grafana', 'Promtail', 'cAdvisor', 'D')
-ON DUPLICATE KEY UPDATE `content`=`content`;
+ON DUPLICATE KEY UPDATE `content`=VALUES(`content`), `option_a`=VALUES(`option_a`), `option_b`=VALUES(`option_b`), `option_c`=VALUES(`option_c`), `option_d`=VALUES(`option_d`);

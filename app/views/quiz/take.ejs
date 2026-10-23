@@ -6,11 +6,11 @@
         <div class="flex-between align-center mt-2">
             <div>
                 <h2><%= quiz.title %></h2>
-                <p class="subtitle"><%= quiz.description %></p>
+                <p class="subtitle"><%= quiz.description || 'Bài thi trắc nghiệm trực tuyến.' %></p>
             </div>
-            <div class="timer-box">
-                <span class="timer-label">Thời gian:</span>
-                <span class="timer-value"><%= quiz.time_limit %> phút</span>
+            <div class="timer-box" id="timerBox">
+                <span class="timer-label">⏱️ Còn lại:</span>
+                <span class="timer-value" id="timerDisplay"><%= quiz.time_limit %>:00</span>
             </div>
         </div>
     </div>
@@ -18,10 +18,10 @@
     <% if (error) { %>
         <div class="alert alert-danger"><%= error %></div>
     <% } else { %>
-        <form action="/quizzes/<%= quiz.id %>/submit" method="POST" id="quizForm" onsubmit="return confirm('Bạn có chắc chắn muốn nộp bài thi không?')">
+        <form action="/quizzes/<%= quiz.id %>/submit" method="POST" id="quizForm">
             <div class="quiz-questions-wrap">
                 <% questions.forEach((q, index) => { %>
-                    <div class="quiz-card question-box">
+                    <div class="quiz-card question-box" id="card_q_<%= q.id %>">
                         <div class="question-title">
                             <span class="q-badge">Câu <%= index + 1 %></span>
                             <span class="q-text"><%= q.content %></span>
@@ -29,25 +29,25 @@
 
                         <div class="options-group">
                             <label class="option-label">
-                                <input type="radio" name="q_<%= q.id %>" value="A" required>
+                                <input type="radio" name="q_<%= q.id %>" value="A" onchange="updateAnswerProgress()">
                                 <span class="option-custom">A</span>
                                 <span class="option-text"><%= q.option_a %></span>
                             </label>
 
                             <label class="option-label">
-                                <input type="radio" name="q_<%= q.id %>" value="B">
+                                <input type="radio" name="q_<%= q.id %>" value="B" onchange="updateAnswerProgress()">
                                 <span class="option-custom">B</span>
                                 <span class="option-text"><%= q.option_b %></span>
                             </label>
 
                             <label class="option-label">
-                                <input type="radio" name="q_<%= q.id %>" value="C">
+                                <input type="radio" name="q_<%= q.id %>" value="C" onchange="updateAnswerProgress()">
                                 <span class="option-custom">C</span>
                                 <span class="option-text"><%= q.option_c %></span>
                             </label>
 
                             <label class="option-label">
-                                <input type="radio" name="q_<%= q.id %>" value="D">
+                                <input type="radio" name="q_<%= q.id %>" value="D" onchange="updateAnswerProgress()">
                                 <span class="option-custom">D</span>
                                 <span class="option-text"><%= q.option_d %></span>
                             </label>
@@ -57,10 +57,92 @@
             </div>
 
             <div class="submit-bar">
-                <div class="submit-note">Hãy kiểm tra kỹ các câu trả lời trước khi nộp bài. Điểm số sẽ được chấm tự động ngay lập tức.</div>
-                <button type="submit" class="btn btn-success btn-lg">🚀 Nộp bài thi</button>
+                <div class="submit-note">
+                    <span id="progressText">Đã trả lời: 0 / <%= questions.length %> câu</span>
+                    <span style="display:block; font-size: 0.85rem; color: var(--text-muted);">Hệ thống sẽ tự động chấm điểm và công bố kết quả ngay khi nộp bài.</span>
+                </div>
+                <button type="button" id="btnSubmitQuiz" onclick="handleSubmitQuiz()" class="btn btn-success btn-lg">
+                    🚀 Nộp bài thi
+                </button>
             </div>
         </form>
+
+        <script>
+        const totalQuestions = <%= questions.length %>;
+        let timeRemaining = <%= quiz.time_limit %> * 60; // tính bằng giây
+        let timerInterval = null;
+
+        function updateAnswerProgress() {
+            const form = document.getElementById('quizForm');
+            const formData = new FormData(form);
+            let answered = 0;
+            for (let pair of formData.entries()) {
+                if (pair[0].startsWith('q_')) answered++;
+            }
+            const prog = document.getElementById('progressText');
+            if (prog) {
+                prog.textContent = `Đã trả lời: ${answered} / ${totalQuestions} câu`;
+                if (answered === totalQuestions) {
+                    prog.style.color = '#059669';
+                    prog.style.fontWeight = '700';
+                }
+            }
+        }
+
+        // Đếm ngược thời gian làm bài
+        function startTimer() {
+            const display = document.getElementById('timerDisplay');
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Hết giờ làm bài! Hệ thống đang tự động nộp bài của bạn.');
+                    executeSubmit();
+                    return;
+                }
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                display.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                // Cảnh báo khi còn dưới 1 phút
+                if (timeRemaining < 60) {
+                    display.style.color = '#dc2626';
+                    display.style.fontWeight = '800';
+                }
+            }, 1000);
+        }
+
+        function handleSubmitQuiz() {
+            const form = document.getElementById('quizForm');
+            const formData = new FormData(form);
+            let answered = 0;
+            for (let pair of formData.entries()) {
+                if (pair[0].startsWith('q_')) answered++;
+            }
+
+            if (answered < totalQuestions) {
+                const confirmSubmit = confirm(`Bạn mới trả lời ${answered}/${totalQuestions} câu hỏi. Bạn có chắc chắn muốn nộp bài thi ngay bây giờ không?`);
+                if (!confirmSubmit) return;
+            }
+
+            executeSubmit();
+        }
+
+        function executeSubmit() {
+            const btn = document.getElementById('btnSubmitQuiz');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '⏳ Đang nộp bài & Chấm điểm...';
+            }
+            if (timerInterval) clearInterval(timerInterval);
+            document.getElementById('quizForm').submit();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            startTimer();
+            updateAnswerProgress();
+        });
+        </script>
     <% } %>
 </div>
 

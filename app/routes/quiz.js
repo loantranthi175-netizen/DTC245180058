@@ -143,8 +143,8 @@ router.get('/quizzes/results/:resultId', async (req, res) => {
         }
 
         const result = rows[0];
-        // Đảm bảo chỉ chính thí sinh làm bài hoặc admin mới xem được
-        if (result.user_id !== req.session.user.id && req.session.user.role !== 'admin') {
+        // Đảm bảo chính thí sinh làm bài, giáo viên hoặc admin mới xem được
+        if (result.user_id !== req.session.user.id && req.session.user.role !== 'admin' && req.session.user.role !== 'teacher') {
             return res.status(403).send('Bạn không có quyền xem kết quả bài thi này.');
         }
 

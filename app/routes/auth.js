@@ -39,7 +39,7 @@ router.post('/login', async (req, res) => {
             role: user.role
         };
 
-        if (user.role === 'admin') {
+        if (user.role === 'admin' || user.role === 'teacher') {
             return res.redirect('/admin');
         } else {
             return res.redirect('/quizzes');
@@ -70,7 +70,7 @@ router.post('/register', async (req, res) => {
         return res.render('auth/register', { error: 'Mật khẩu phải chứa ít nhất 6 ký tự.' });
     }
 
-    const assignedRole = (role === 'admin') ? 'admin' : 'candidate';
+    const assignedRole = ['admin', 'teacher', 'candidate'].includes(role) ? role : 'candidate';
 
     try {
         // Kiểm tra email trùng lặp

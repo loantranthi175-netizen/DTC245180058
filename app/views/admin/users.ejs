@@ -1,0 +1,96 @@
+<%- include('../layouts/header', { title: 'Quản lý người dùng' }) %>
+
+<div class="container">
+    <div class="page-header flex-between">
+        <div>
+            <h1>👥 Quản lý Người dùng & Phân quyền</h1>
+            <p class="subtitle">Quản trị các tài khoản trong hệ thống với 3 tác nhân: Quản trị viên, Giáo viên, và Sinh viên</p>
+        </div>
+        <div>
+            <a href="/admin" class="btn btn-outline">← Quay lại Bảng điều khiển</a>
+        </div>
+    </div>
+
+    <% if (success === 'role_updated') { %>
+        <div class="alert alert-success">✅ Cập nhật vai trò người dùng thành công!</div>
+    <% } else if (success === 'user_deleted') { %>
+        <div class="alert alert-success">✅ Đã xóa tài khoản người dùng thành công!</div>
+    <% } %>
+
+    <% if (error === 'cannot_delete_self') { %>
+        <div class="alert alert-danger">❌ Bạn không thể tự xóa tài khoản của chính mình!</div>
+    <% } else if (error === 'invalid_role') { %>
+        <div class="alert alert-danger">❌ Vai trò không hợp lệ!</div>
+    <% } else if (error) { %>
+        <div class="alert alert-danger">❌ Đã có lỗi xảy ra trong quá trình xử lý.</div>
+    <% } %>
+
+    <!-- Danh sách người dùng -->
+    <div class="card mb-4">
+        <div class="card-header flex-between">
+            <h3>Danh sách Tài khoản (<%= users.length %> thành viên)</h3>
+            <span class="badge badge-purple">Hệ thống 3 Tác nhân</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Họ và tên</th>
+                            <th>Email</th>
+                            <th>Vai trò hiện tại</th>
+                            <th>Lượt làm bài</th>
+                            <th>Ngày tham gia</th>
+                            <th>Đổi vai trò</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(u => { %>
+                            <tr>
+                                <td>#<%= u.id %></td>
+                                <td><strong><%= u.fullname %></strong></td>
+                                <td><code><%= u.email %></code></td>
+                                <td>
+                                    <% if (u.role === 'admin') { %>
+                                        <span class="role-badge role-admin">Quản trị viên</span>
+                                    <% } else if (u.role === 'teacher') { %>
+                                        <span class="role-badge role-teacher">Giáo viên</span>
+                                    <% } else { %>
+                                        <span class="role-badge role-candidate">Sinh viên</span>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <span class="badge badge-blue"><%= u.quiz_taken_count || 0 %> lượt</span>
+                                </td>
+                                <td><%= new Date(u.created_at).toLocaleDateString('vi-VN') %></td>
+                                <td>
+                                    <form action="/admin/users/<%= u.id %>/role" method="POST" class="role-change-form" style="display:flex; gap:0.5rem; align-items:center;">
+                                        <select name="role" class="form-control form-control-sm" style="width: auto; padding: 0.25rem 0.5rem; font-size: 0.85rem;">
+                                            <option value="candidate" <%= u.role === 'candidate' ? 'selected' : '' %>>Sinh viên</option>
+                                            <option value="teacher" <%= u.role === 'teacher' ? 'selected' : '' %>>Giáo viên</option>
+                                            <option value="admin" <%= u.role === 'admin' ? 'selected' : '' %>>Quản trị viên</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-outline">Lưu</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <% if (u.id === user.id) { %>
+                                        <span class="text-muted" style="font-size: 0.85rem;">(Đang đăng nhập)</span>
+                                    <% } else { %>
+                                        <form action="/admin/users/<%= u.id %>/delete" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa người dùng <%= u.fullname %> không?')" style="display:inline;">
+                                            <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                                        </form>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

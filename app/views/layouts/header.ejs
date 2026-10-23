@@ -20,8 +20,12 @@
             <nav class="nav-menu">
                 <% if (user) { %>
                     <% if (user.role === 'admin') { %>
-                        <a href="/admin" class="nav-link <%= currentPath === '/admin' ? 'active' : '' %>">📊 Bảng điều khiển</a>
+                        <a href="/admin" class="nav-link <%= currentPath === '/admin' ? 'active' : '' %>">📊 Tổng quan</a>
+                        <a href="/admin/users" class="nav-link <%= currentPath === '/admin/users' ? 'active' : '' %>">👥 Quản lý người dùng</a>
                         <a href="/admin/quizzes/create" class="nav-link <%= currentPath === '/admin/quizzes/create' ? 'active' : '' %>">➕ Tạo đề thi</a>
+                    <% } else if (user.role === 'teacher') { %>
+                        <a href="/admin" class="nav-link <%= currentPath === '/admin' ? 'active' : '' %>">📚 Đề thi & Kết quả</a>
+                        <a href="/admin/quizzes/create" class="nav-link <%= currentPath === '/admin/quizzes/create' ? 'active' : '' %>">➕ Tạo đề thi mới</a>
                     <% } else { %>
                         <a href="/quizzes" class="nav-link <%= currentPath === '/quizzes' ? 'active' : '' %>">📚 Đề thi</a>
                         <a href="/history" class="nav-link <%= currentPath === '/history' ? 'active' : '' %>">🕒 Lịch sử làm bài</a>
@@ -34,7 +38,13 @@
                 <% if (user) { %>
                     <div class="user-info">
                         <span class="user-name"><%= user.fullname %></span>
-                        <span class="role-badge role-<%= user.role %>"><%= user.role === 'admin' ? 'Admin' : 'Thí sinh' %></span>
+                        <% if (user.role === 'admin') { %>
+                            <span class="role-badge role-admin">Quản trị viên</span>
+                        <% } else if (user.role === 'teacher') { %>
+                            <span class="role-badge role-teacher">Giáo viên</span>
+                        <% } else { %>
+                            <span class="role-badge role-candidate">Sinh viên</span>
+                        <% } %>
                     </div>
                     <a href="/logout" class="btn btn-outline btn-sm">Đăng xuất</a>
                 <% } else { %>

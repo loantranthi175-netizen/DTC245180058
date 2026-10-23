@@ -39,6 +39,11 @@ services:
       DB_USER: ${DB_USER:-quiz_user}
       DB_PASSWORD: ${DB_PASSWORD:-QuizSecret@2026}
       SESSION_SECRET: ${SESSION_SECRET:-quiz_super_secure_session_key_2026}
+    volumes:
+      - ./app/views:/usr/src/app/views:ro
+      - ./app/routes:/usr/src/app/routes:ro
+      - ./app/public:/usr/src/app/public:ro
+      - ./app/config:/usr/src/app/config:ro
     depends_on:
       mysql:
         condition: service_healthy
@@ -168,6 +173,34 @@ services:
     networks:
       - quiz-network
 
+  # 10. Hệ thống lưu trữ Log tập trung (Loki)
+  loki:
+    image: grafana/loki:2.9.8
+    container_name: quiz-loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki_data:/loki
+    command: -config.file=/etc/loki/loki-config.yml
+    networks:
+      - quiz-network
+
+  # 11. Thu thập và gửi Log tới Loki (Promtail)
+  promtail:
+    image: grafana/promtail:2.9.8
+    container_name: quiz-promtail
+    restart: unless-stopped
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - nginx_logs:/var/log/nginx:ro
+    command: -config.file=/etc/promtail/promtail-config.yml
+    depends_on:
+      - loki
+    networks:
+      - quiz-network
+
 volumes:
   mysql_data:
     name: quiz_mysql_data
@@ -177,6 +210,8 @@ volumes:
     name: quiz_prometheus_data
   grafana_data:
     name: quiz_grafana_data
+  loki_data:
+    name: quiz_loki_data
 
 networks:
   quiz-network:

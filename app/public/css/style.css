@@ -152,6 +152,11 @@ body {
     color: #dc2626;
 }
 
+.role-teacher {
+    background: #fef3c7;
+    color: #b45309;
+}
+
 .role-candidate {
     background: #e0e7ff;
     color: #4338ca;

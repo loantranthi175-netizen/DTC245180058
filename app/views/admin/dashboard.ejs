@@ -3,10 +3,18 @@
 <div class="container">
     <div class="page-header flex-between">
         <div>
-            <h1>📊 Bảng điều khiển Quản trị viên</h1>
-            <p class="subtitle">Quản lý đề thi, câu hỏi trắc nghiệm và theo dõi kết quả của thí sinh</p>
+            <% if (isTeacher) { %>
+                <h1>👨‍🏫 Bảng điều khiển Giáo viên</h1>
+                <p class="subtitle">Soạn đề thi, quản lý câu hỏi trắc nghiệm và theo dõi điểm số của sinh viên</p>
+            <% } else { %>
+                <h1>📊 Bảng điều khiển Quản trị viên (Admin)</h1>
+                <p class="subtitle">Quản lý toàn bộ đề thi, phân quyền người dùng và kiểm soát hệ thống</p>
+            <% } %>
         </div>
-        <div>
+        <div style="display: flex; gap: 0.75rem;">
+            <% if (!isTeacher) { %>
+                <a href="/admin/users" class="btn btn-outline">👥 Quản lý người dùng</a>
+            <% } %>
             <a href="/admin/quizzes/create" class="btn btn-primary">➕ Tạo đề thi mới</a>
         </div>
     </div>
@@ -19,12 +27,18 @@
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-number"><%= quizzes.length %></div>
-            <div class="stat-label">Tổng số đề thi</div>
+            <div class="stat-label"><%= isTeacher ? 'Đề thi của tôi' : 'Tổng số đề thi' %></div>
         </div>
         <div class="stat-card">
             <div class="stat-number"><%= totalCandidates %></div>
-            <div class="stat-label">Thí sinh đã đăng ký</div>
+            <div class="stat-label">Sinh viên hệ thống</div>
         </div>
+        <% if (!isTeacher) { %>
+            <div class="stat-card">
+                <div class="stat-number"><%= totalTeachers %></div>
+                <div class="stat-label">Giáo viên giảng dạy</div>
+            </div>
+        <% } %>
         <div class="stat-card">
             <div class="stat-number"><%= recentResults.length %></div>
             <div class="stat-label">Lượt làm bài gần đây</div>
