@@ -1,0 +1,126 @@
+<%- include('../layouts/header', { title: 'Bảng điều khiển Quản trị' }) %>
+
+<div class="container">
+    <div class="page-header flex-between">
+        <div>
+            <h1>📊 Bảng điều khiển Quản trị viên</h1>
+            <p class="subtitle">Quản lý đề thi, câu hỏi trắc nghiệm và theo dõi kết quả của thí sinh</p>
+        </div>
+        <div>
+            <a href="/admin/quizzes/create" class="btn btn-primary">➕ Tạo đề thi mới</a>
+        </div>
+    </div>
+
+    <% if (success === 'deleted') { %>
+        <div class="alert alert-success">Đã xóa bài thi thành công!</div>
+    <% } %>
+
+    <!-- Thẻ thống kê nhanh -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number"><%= quizzes.length %></div>
+            <div class="stat-label">Tổng số đề thi</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number"><%= totalCandidates %></div>
+            <div class="stat-label">Thí sinh đã đăng ký</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number"><%= recentResults.length %></div>
+            <div class="stat-label">Lượt làm bài gần đây</div>
+        </div>
+    </div>
+
+    <!-- Danh sách đề thi -->
+    <div class="card mb-4">
+        <div class="card-header flex-between">
+            <h3>Danh sách Đề thi trắc nghiệm</h3>
+            <span class="badge badge-info"><%= quizzes.length %> đề thi</span>
+        </div>
+        <div class="card-body">
+            <% if (quizzes.length === 0) { %>
+                <div class="empty-state">
+                    <p>Chưa có đề thi nào trong hệ thống.</p>
+                    <a href="/admin/quizzes/create" class="btn btn-primary">Tạo đề thi đầu tiên</a>
+                </div>
+            <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên đề thi</th>
+                                <th>Thời gian</th>
+                                <th>Số câu hỏi</th>
+                                <th>Lượt nộp</th>
+                                <th>Ngày tạo</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% quizzes.forEach(q => { %>
+                                <tr>
+                                    <td>#<%= q.id %></td>
+                                    <td><strong><%= q.title %></strong></td>
+                                    <td><%= q.time_limit %> phút</td>
+                                    <td><span class="badge badge-purple"><%= q.question_count %> câu</span></td>
+                                    <td><span class="badge badge-blue"><%= q.submission_count %> lượt</span></td>
+                                    <td><%= new Date(q.created_at).toLocaleDateString('vi-VN') %></td>
+                                    <td class="table-actions">
+                                        <a href="/admin/quizzes/<%= q.id %>/questions" class="btn btn-sm btn-outline">✏️ Câu hỏi (<%= q.question_count %>)</a>
+                                        <form action="/admin/quizzes/<%= q.id %>/delete" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đề thi này không?')" style="display:inline;">
+                                            <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Kết quả thi gần đây -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Lịch sử nộp bài gần đây của thí sinh</h3>
+        </div>
+        <div class="card-body">
+            <% if (recentResults.length === 0) { %>
+                <p class="text-muted">Chưa có lượt nộp bài nào.</p>
+            <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Thí sinh</th>
+                                <th>Đề thi</th>
+                                <th>Đúng / Tổng</th>
+                                <th>Điểm số</th>
+                                <th>Thời gian nộp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% recentResults.forEach(r => { %>
+                                <tr>
+                                    <td><strong><%= r.fullname %></strong> (<%= r.email %>)</td>
+                                    <td><%= r.quiz_title %></td>
+                                    <td><%= r.correct_answers %> / <%= r.total_questions %></td>
+                                    <td>
+                                        <span class="score-badge <%= r.score >= 5 ? 'score-pass' : 'score-fail' %>">
+                                            <%= r.score %> / 10
+                                        </span>
+                                    </td>
+                                    <td><%= new Date(r.submitted_at).toLocaleString('vi-VN') %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

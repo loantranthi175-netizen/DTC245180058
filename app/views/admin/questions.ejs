@@ -1,0 +1,113 @@
+<%- include('../layouts/header', { title: 'Quản lý câu hỏi' }) %>
+
+<div class="container">
+    <div class="page-header flex-between">
+        <div>
+            <a href="/admin" class="back-link">← Quay lại danh sách đề thi</a>
+            <h2>Quản lý câu hỏi: <%= quiz.title %></h2>
+            <p class="subtitle"><%= quiz.description || 'Không có mô tả' %> | Thời gian: <%= quiz.time_limit %> phút</p>
+        </div>
+        <div>
+            <a href="/quizzes/<%= quiz.id %>/take" target="_blank" class="btn btn-outline">👁️ Xem trước giao diện thi</a>
+        </div>
+    </div>
+
+    <% if (success) { %>
+        <div class="alert alert-success"><%= success %></div>
+    <% } %>
+
+    <div class="grid-2-col">
+        <!-- Form thêm câu hỏi mới -->
+        <div class="card">
+            <div class="card-header">
+                <h3>➕ Thêm câu hỏi mới (4 đáp án)</h3>
+            </div>
+            <div class="card-body">
+                <form action="/admin/quizzes/<%= quiz.id %>/questions" method="POST">
+                    <div class="form-group">
+                        <label for="content">Nội dung câu hỏi <span class="required">*</span></label>
+                        <textarea id="content" name="content" rows="3" class="form-control" placeholder="Nhập câu hỏi tại đây..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="option_a">Đáp án A <span class="required">*</span></label>
+                        <input type="text" id="option_a" name="option_a" class="form-control" placeholder="Lựa chọn A" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="option_b">Đáp án B <span class="required">*</span></label>
+                        <input type="text" id="option_b" name="option_b" class="form-control" placeholder="Lựa chọn B" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="option_c">Đáp án C <span class="required">*</span></label>
+                        <input type="text" id="option_c" name="option_c" class="form-control" placeholder="Lựa chọn C" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="option_d">Đáp án D <span class="required">*</span></label>
+                        <input type="text" id="option_d" name="option_d" class="form-control" placeholder="Lựa chọn D" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="correct_option">Đáp án đúng chính xác <span class="required">*</span></label>
+                        <select id="correct_option" name="correct_option" class="form-control" required>
+                            <option value="">-- Chọn đáp án đúng --</option>
+                            <option value="A">Đáp án A</option>
+                            <option value="B">Đáp án B</option>
+                            <option value="C">Đáp án C</option>
+                            <option value="D">Đáp án D</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Lưu câu hỏi vào đề</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Danh sách câu hỏi hiện tại -->
+        <div class="card">
+            <div class="card-header flex-between">
+                <h3>Danh sách câu hỏi hiện có</h3>
+                <span class="badge badge-purple"><%= questions.length %> câu hỏi</span>
+            </div>
+            <div class="card-body">
+                <% if (questions.length === 0) { %>
+                    <div class="empty-state">
+                        <p>Đề thi này chưa có câu hỏi nào. Hãy thêm câu hỏi ở form bên trái.</p>
+                    </div>
+                <% } else { %>
+                    <div class="questions-list">
+                        <% questions.forEach((q, index) => { %>
+                            <div class="question-item">
+                                <div class="question-header flex-between">
+                                    <span class="question-number">Câu <%= index + 1 %></span>
+                                    <form action="/admin/quizzes/<%= quiz.id %>/questions/<%= q.id %>/delete" method="POST" onsubmit="return confirm('Xóa câu hỏi này?')" style="display:inline;">
+                                        <button type="submit" class="btn btn-xs btn-danger">Xóa</button>
+                                    </form>
+                                </div>
+                                <p class="question-text"><%= q.content %></p>
+                                <div class="options-preview">
+                                    <div class="option-pill <%= q.correct_option === 'A' ? 'option-correct' : '' %>">
+                                        <strong>A:</strong> <%= q.option_a %>
+                                    </div>
+                                    <div class="option-pill <%= q.correct_option === 'B' ? 'option-correct' : '' %>">
+                                        <strong>B:</strong> <%= q.option_b %>
+                                    </div>
+                                    <div class="option-pill <%= q.correct_option === 'C' ? 'option-correct' : '' %>">
+                                        <strong>C:</strong> <%= q.option_c %>
+                                    </div>
+                                    <div class="option-pill <%= q.correct_option === 'D' ? 'option-correct' : '' %>">
+                                        <strong>D:</strong> <%= q.option_d %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

@@ -1,0 +1,84 @@
+<%- include('../layouts/header', { title: 'Danh sách Đề thi' }) %>
+
+<div class="container">
+    <div class="hero-banner">
+        <h2>Xin chào, <%= user.fullname %>! 👋</h2>
+        <p>Chào mừng bạn đến với Hệ thống Thi trắc nghiệm trực tuyến môn Triển khai và Quản trị Hệ thống.</p>
+    </div>
+
+    <div class="section-header">
+        <h3>📚 Danh sách Đề thi hiện có</h3>
+    </div>
+
+    <% if (quizzes.length === 0) { %>
+        <div class="card empty-state">
+            <p>Hiện tại chưa có đề thi nào mở.</p>
+        </div>
+    <% } else { %>
+        <div class="quiz-grid">
+            <% quizzes.forEach(q => { %>
+                <div class="quiz-card">
+                    <div class="quiz-card-header">
+                        <h4><%= q.title %></h4>
+                        <span class="badge badge-purple"><%= q.question_count %> câu hỏi</span>
+                    </div>
+                    <div class="quiz-card-body">
+                        <p class="quiz-desc"><%= q.description || 'Bài kiểm tra trắc nghiệm kiến thức tổng hợp.' %></p>
+                        <div class="quiz-meta">
+                            <span>⏱️ Thời gian: <strong><%= q.time_limit %> phút</strong></span>
+                        </div>
+                    </div>
+                    <div class="quiz-card-footer">
+                        <% if (q.question_count > 0) { %>
+                            <a href="/quizzes/<%= q.id %>/take" class="btn btn-primary btn-block">Bắt đầu làm bài →</a>
+                        <% } else { %>
+                            <button class="btn btn-disabled btn-block" disabled>Chưa có câu hỏi</button>
+                        <% } %>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+
+    <!-- Lịch sử làm bài gần đây của thí sinh -->
+    <% if (myRecentResults && myRecentResults.length > 0) { %>
+        <div class="card mt-4">
+            <div class="card-header flex-between">
+                <h3>🕒 Lịch sử làm bài gần đây của bạn</h3>
+                <a href="/history" class="btn-link">Xem tất cả →</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Đề thi</th>
+                                <th>Số câu đúng</th>
+                                <th>Điểm số</th>
+                                <th>Thời gian nộp</th>
+                                <th>Chi tiết</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% myRecentResults.forEach(r => { %>
+                                <tr>
+                                    <td><strong><%= r.quiz_title %></strong></td>
+                                    <td><%= r.correct_answers %> / <%= r.total_questions %></td>
+                                    <td>
+                                        <span class="score-badge <%= r.score >= 5 ? 'score-pass' : 'score-fail' %>">
+                                            <%= r.score %> / 10
+                                        </span>
+                                    </td>
+                                    <td><%= new Date(r.submitted_at).toLocaleString('vi-VN') %></td>
+                                    <td><a href="/quizzes/results/<%= r.id %>" class="btn btn-xs btn-outline">Xem lại</a></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<%- include('../layouts/footer') %>

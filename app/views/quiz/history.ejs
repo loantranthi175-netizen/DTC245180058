@@ -1,0 +1,56 @@
+<%- include('../layouts/header', { title: 'Lịch sử làm bài' }) %>
+
+<div class="container">
+    <div class="page-header">
+        <h2>🕒 Lịch sử làm bài thi của bạn</h2>
+        <p class="subtitle">Danh sách các bài thi trắc nghiệm bạn đã hoàn thành</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <% if (results.length === 0) { %>
+                <div class="empty-state">
+                    <p>Bạn chưa hoàn thành bài thi nào.</p>
+                    <a href="/quizzes" class="btn btn-primary">Khám phá danh sách đề thi</a>
+                </div>
+            <% } else { %>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tên đề thi</th>
+                                <th>Số câu đúng</th>
+                                <th>Điểm số</th>
+                                <th>Kết quả</th>
+                                <th>Thời gian nộp</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% results.forEach((r, idx) => { %>
+                                <tr>
+                                    <td><%= idx + 1 %></td>
+                                    <td><strong><%= r.quiz_title %></strong></td>
+                                    <td><%= r.correct_answers %> / <%= r.total_questions %></td>
+                                    <td><strong><%= r.score %> / 10</strong></td>
+                                    <td>
+                                        <span class="score-badge <%= r.score >= 5 ? 'score-pass' : 'score-fail' %>">
+                                            <%= r.score >= 5 ? 'Đạt' : 'Chưa đạt' %>
+                                        </span>
+                                    </td>
+                                    <td><%= new Date(r.submitted_at).toLocaleString('vi-VN') %></td>
+                                    <td>
+                                        <a href="/quizzes/results/<%= r.id %>" class="btn btn-xs btn-outline">Chi tiết</a>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

@@ -1,0 +1,19 @@
+# Environment variables
+.env
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+
+# Temporary files & logs
+*.log
+.DS_Store
+Thumbs.db
+
+# SQLite local db
+*.sqlite
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/

@@ -1,0 +1,47 @@
+<%- include('../layouts/header', { title: 'Đăng ký' }) %>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Tạo tài khoản mới</h2>
+            <p>Đăng ký để tham gia làm bài thi trắc nghiệm</p>
+        </div>
+
+        <% if (error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+
+        <form action="/register" method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="fullname">Họ và tên</label>
+                <input type="text" id="fullname" name="fullname" class="form-control" placeholder="Nguyễn Văn A" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Địa chỉ Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="example@quiz.local" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mật khẩu (tối thiểu 6 ký tự)</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required minlength="6">
+            </div>
+
+            <div class="form-group">
+                <label for="role">Vai trò</label>
+                <select id="role" name="role" class="form-control">
+                    <option value="candidate" selected>Thí sinh (Làm bài thi)</option>
+                    <option value="admin">Quản trị viên (Tạo đề & Quản lý)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Hoàn tất Đăng ký</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Đã có tài khoản? <a href="/login">Đăng nhập</a></p>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

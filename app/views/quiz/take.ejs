@@ -1,0 +1,67 @@
+<%- include('../layouts/header', { title: 'Làm bài thi: ' + quiz.title }) %>
+
+<div class="container container-md">
+    <div class="quiz-take-header">
+        <a href="/quizzes" class="back-link">← Hủy và quay lại danh sách đề thi</a>
+        <div class="flex-between align-center mt-2">
+            <div>
+                <h2><%= quiz.title %></h2>
+                <p class="subtitle"><%= quiz.description %></p>
+            </div>
+            <div class="timer-box">
+                <span class="timer-label">Thời gian:</span>
+                <span class="timer-value"><%= quiz.time_limit %> phút</span>
+            </div>
+        </div>
+    </div>
+
+    <% if (error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } else { %>
+        <form action="/quizzes/<%= quiz.id %>/submit" method="POST" id="quizForm" onsubmit="return confirm('Bạn có chắc chắn muốn nộp bài thi không?')">
+            <div class="quiz-questions-wrap">
+                <% questions.forEach((q, index) => { %>
+                    <div class="quiz-card question-box">
+                        <div class="question-title">
+                            <span class="q-badge">Câu <%= index + 1 %></span>
+                            <span class="q-text"><%= q.content %></span>
+                        </div>
+
+                        <div class="options-group">
+                            <label class="option-label">
+                                <input type="radio" name="q_<%= q.id %>" value="A" required>
+                                <span class="option-custom">A</span>
+                                <span class="option-text"><%= q.option_a %></span>
+                            </label>
+
+                            <label class="option-label">
+                                <input type="radio" name="q_<%= q.id %>" value="B">
+                                <span class="option-custom">B</span>
+                                <span class="option-text"><%= q.option_b %></span>
+                            </label>
+
+                            <label class="option-label">
+                                <input type="radio" name="q_<%= q.id %>" value="C">
+                                <span class="option-custom">C</span>
+                                <span class="option-text"><%= q.option_c %></span>
+                            </label>
+
+                            <label class="option-label">
+                                <input type="radio" name="q_<%= q.id %>" value="D">
+                                <span class="option-custom">D</span>
+                                <span class="option-text"><%= q.option_d %></span>
+                            </label>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+
+            <div class="submit-bar">
+                <div class="submit-note">Hãy kiểm tra kỹ các câu trả lời trước khi nộp bài. Điểm số sẽ được chấm tự động ngay lập tức.</div>
+                <button type="submit" class="btn btn-success btn-lg">🚀 Nộp bài thi</button>
+            </div>
+        </form>
+    <% } %>
+</div>
+
+<%- include('../layouts/footer') %>
