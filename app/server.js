@@ -7,12 +7,17 @@ const { testConnection } = require('./config/db');
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000', 10);
 
-// 1. Middleware ghi log request ra stdout (chuẩn DevOps phục vụ Promtail/Loki)
+// 1. Bộ đếm và Middleware ghi log request ra stdout (chuẩn DevOps phục vụ Prometheus/Loki)
+let totalHttpRequests = 0;
+let totalHttpErrors = 0;
+
 app.use((req, res, next) => {
+    totalHttpRequests++;
     const startTime = Date.now();
     const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '-';
 
     res.on('finish', () => {
+        if (res.statusCode >= 500) totalHttpErrors++;
         const duration = Date.now() - startTime;
         const now = new Date().toISOString();
         // Định dạng log tiêu chuẩn có cấu trúc
@@ -20,6 +25,34 @@ app.use((req, res, next) => {
     });
 
     next();
+});
+
+// Endpoint metrics chuẩn Prometheus (không cần thư viện bên ngoài)
+app.get('/metrics', (req, res) => {
+    const mem = process.memoryUsage();
+    const uptime = process.uptime();
+    const lines = [
+        '# HELP nodejs_uptime_seconds Process uptime in seconds.',
+        '# TYPE nodejs_uptime_seconds gauge',
+        `nodejs_uptime_seconds ${uptime}`,
+        '# HELP nodejs_memory_heap_used_bytes Process heap memory used in bytes.',
+        '# TYPE nodejs_memory_heap_used_bytes gauge',
+        `nodejs_memory_heap_used_bytes ${mem.heapUsed}`,
+        '# HELP nodejs_memory_heap_total_bytes Process heap memory total in bytes.',
+        '# TYPE nodejs_memory_heap_total_bytes gauge',
+        `nodejs_memory_heap_total_bytes ${mem.heapTotal}`,
+        '# HELP nodejs_memory_rss_bytes Process RSS memory in bytes.',
+        '# TYPE nodejs_memory_rss_bytes gauge',
+        `nodejs_memory_rss_bytes ${mem.rss}`,
+        '# HELP http_requests_total Total number of HTTP requests.',
+        '# TYPE http_requests_total counter',
+        `http_requests_total ${totalHttpRequests}`,
+        '# HELP http_errors_total Total number of 5xx HTTP errors.',
+        '# TYPE http_errors_total counter',
+        `http_errors_total ${totalHttpErrors}`
+    ];
+    res.set('Content-Type', 'text/plain; version=0.0.4');
+    res.send(lines.join('\n') + '\n');
 });
 
 // 2. Parse request body

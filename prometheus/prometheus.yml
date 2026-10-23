@@ -1,0 +1,31 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  # 1. Prometheus Server tự giám sát chính mình
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # 2. Giám sát Ứng dụng Quiz (Node.js/Express)
+  - job_name: 'quiz-app'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['app:3000']
+
+  # 3. Giám sát Nginx Web Server (Nginx Prometheus Exporter)
+  - job_name: 'nginx-web'
+    static_configs:
+      - targets: ['nginx-exporter:9113']
+
+  # 4. Giám sát Cơ sở dữ liệu MySQL (MySQLd Exporter)
+  - job_name: 'mysql-database'
+    static_configs:
+      - targets: ['mysql-exporter:9104']
+
+  # 5. Giám sát Containers (cAdvisor)
+  - job_name: 'cadvisor-containers'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
