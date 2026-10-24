@@ -1,61 +1,207 @@
-<%- include('../layouts/header', { title: 'Đăng nhập' }) %>
-
-<div class="auth-wrapper">
-    <div class="auth-card">
-        <div class="auth-header">
-            <h2>Đăng nhập Hệ thống</h2>
-            <p>Nhập thông tin tài khoản của bạn để tiếp tục</p>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập hệ thống - Hệ Thống Quiz Online</title>
+    <!-- Tailwind CSS Script -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white">
+    <div class="min-h-screen flex flex-col font-sans">
+      <!-- Top Navbar -->
+      <header class="w-full border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <a href="/" class="flex items-center gap-3 text-decoration-none">
+            <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div>
+              <h1 class="font-bold text-lg text-white">Hệ Thống Quiz Online</h1>
+              <p class="text-[11px] text-slate-400">Nền tảng khảo thí & đánh giá trực tuyến</p>
+            </div>
+          </a>
+          <div class="flex items-center gap-2">
+            <a href="/login" class="px-3 py-1.5 text-sm text-slate-300 hover:text-white transition">Đăng nhập</a>
+            <a href="/register" class="px-3.5 py-1.5 text-sm bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium transition shadow-sm">Đăng ký</a>
+          </div>
         </div>
+      </header>
 
-        <% if (error) { %>
-            <div class="alert alert-danger"><%= error %></div>
-        <% } %>
+      <!-- Main Container -->
+      <main class="flex-1 flex items-center justify-center p-4 sm:p-6 relative">
+        <div class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 backdrop-blur-xl">
+          <div class="text-center mb-6">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 mb-3 shadow-inner">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white">Đăng nhập hệ thống</h2>
+            <p class="text-xs text-slate-400 mt-1">Hệ thống thi trắc nghiệm trực tuyến bảo mật cao</p>
+          </div>
 
-        <% if (success) { %>
-            <div class="alert alert-success"><%= success %></div>
-        <% } %>
+          <% if (error) { %>
+            <div class="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span><%= error %></span>
+            </div>
+          <% } %>
 
-        <form action="/login" method="POST" class="auth-form">
-            <div class="form-group">
-                <label for="email">Địa chỉ Email</label>
-                <input type="email" id="email" name="email" class="form-control" placeholder="admin@quiz.local" required autofocus>
+          <% if (success) { %>
+            <div class="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span><%= success %></span>
+            </div>
+          <% } %>
+
+          <form action="/login" method="POST" class="space-y-4" id="loginForm">
+            <div>
+              <label class="block text-xs font-semibold uppercase text-slate-300 mb-1.5">Tài khoản / Email</label>
+              <input 
+                type="text" 
+                id="usernameInput"
+                name="email"
+                value="student"
+                placeholder="Nhập tên đăng nhập hoặc email"
+                required
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/60 border border-slate-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              />
             </div>
 
-            <div class="form-group">
-                <label for="password">Mật khẩu</label>
-                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="block text-xs font-semibold uppercase text-slate-300">Mật khẩu</label>
+                <a href="javascript:void(0)" onclick="alert('Vui lòng liên hệ Quản trị viên để đặt lại mật khẩu.')" class="text-xs text-indigo-400 hover:text-indigo-300 transition">Quên mật khẩu?</a>
+              </div>
+              <div class="relative">
+                <input 
+                  type="password" 
+                  id="passwordInput"
+                  name="password"
+                  value="Student@123"
+                  placeholder="••••••••••••"
+                  required
+                  class="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-slate-950/60 border border-slate-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                />
+                <button 
+                  type="button" 
+                  id="togglePwdBtn"
+                  onclick="togglePassword()"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-200 transition"
+                >
+                  <svg id="eyeIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  <svg id="eyeOffIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
-        </form>
+            <button 
+              type="submit" 
+              class="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white font-semibold text-sm shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2 mt-2"
+            >
+              <span>Đăng nhập vào hệ thống</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </form>
 
-        <div class="quick-credentials">
-            <p class="quick-title">⚡ Tài khoản mẫu cho 3 tác nhân:</p>
-            <div class="cred-box" onclick="fillCred('admin@quiz.local', 'Admin@123')">
-                <strong>👑 Quản trị viên:</strong> <code>admin@quiz.local</code> / <code>Admin@123</code>
-                <span class="btn-copy">Chọn</span>
+          <!-- Quick Login Helpers -->
+          <div class="mt-6 pt-5 border-t border-slate-800">
+            <span class="text-xs font-semibold text-amber-400 uppercase tracking-wide block mb-3">
+              ⚡ Bấm để điền nhanh tài khoản mẫu:
+            </span>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-950/40 border border-slate-800 hover:border-slate-700 transition">
+                <span class="text-xs text-slate-300">👨‍🎓 Thí sinh (Student): <code class="text-slate-400">student</code></span>
+                <button 
+                  type="button"
+                  onclick="fillAccount('student', 'Student@123')"
+                  class="text-[11px] font-semibold px-2.5 py-1 rounded-md bg-sky-600/20 text-sky-300 border border-sky-500/30 hover:bg-sky-600/30 transition active:scale-95"
+                >
+                  ĐIỀN NHANH
+                </button>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-950/40 border border-slate-800 hover:border-slate-700 transition">
+                <span class="text-xs text-slate-300">👩‍🏫 Giáo viên (Teacher): <code className="text-slate-400">teacher</code></span>
+                <button 
+                  type="button"
+                  onclick="fillAccount('teacher', 'Teacher@123')"
+                  class="text-[11px] font-semibold px-2.5 py-1 rounded-md bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-600/30 transition active:scale-95"
+                >
+                  ĐIỀN NHANH
+                </button>
+              </div>
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-950/40 border border-slate-800 hover:border-slate-700 transition">
+                <span class="text-xs text-slate-300">👑 Quản trị viên (Admin): <code class="text-slate-400">admin</code></span>
+                <button 
+                  type="button"
+                  onclick="fillAccount('admin', 'Admin@123')"
+                  class="text-[11px] font-semibold px-2.5 py-1 rounded-md bg-purple-600/20 text-purple-300 border border-purple-500/30 hover:bg-purple-600/30 transition active:scale-95"
+                >
+                  ĐIỀN NHANH
+                </button>
+              </div>
             </div>
-            <div class="cred-box" onclick="fillCred('teacher@quiz.local', 'Teacher@123')">
-                <strong>👨‍🏫 Giáo viên:</strong> <code>teacher@quiz.local</code> / <code>Teacher@123</code>
-                <span class="btn-copy">Chọn</span>
-            </div>
-            <div class="cred-box" onclick="fillCred('student@quiz.local', 'Student@123')">
-                <strong>🎓 Sinh viên:</strong> <code>student@quiz.local</code> / <code>Student@123</code>
-                <span class="btn-copy">Chọn</span>
-            </div>
+          </div>
         </div>
+      </main>
 
-        <div class="auth-footer">
-            <p>Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
-        </div>
+      <footer class="w-full border-t border-slate-800/80 bg-slate-900/40 py-4 text-center text-xs text-slate-500">
+        &copy; 2026 Hệ Thống Quiz Online &bull; Sinh viên: Trần Thị Loan (DTC245180058) &bull; GVHD: Hoàng Văn Tâm
+      </footer>
     </div>
-</div>
 
-<script>
-function fillCred(email, pass) {
-    document.getElementById('email').value = email;
-    document.getElementById('password').value = pass;
-}
-</script>
+    <script>
+    function fillAccount(user, pass) {
+        const u = document.getElementById('usernameInput');
+        const p = document.getElementById('passwordInput');
+        u.value = user;
+        p.value = pass;
+        
+        // Highlight animation
+        u.classList.add('ring-2', 'ring-indigo-500');
+        p.classList.add('ring-2', 'ring-indigo-500');
+        setTimeout(() => {
+            u.classList.remove('ring-2', 'ring-indigo-500');
+            p.classList.remove('ring-2', 'ring-indigo-500');
+        }, 500);
+    }
 
-<%- include('../layouts/footer') %>
+    function togglePassword() {
+        const p = document.getElementById('passwordInput');
+        const eye = document.getElementById('eyeIcon');
+        const eyeOff = document.getElementById('eyeOffIcon');
+        if (p.type === 'password') {
+            p.type = 'text';
+            eye.classList.add('hidden');
+            eyeOff.classList.remove('hidden');
+        } else {
+            p.type = 'password';
+            eye.classList.remove('hidden');
+            eyeOff.classList.add('hidden');
+        }
+    }
+    </script>
+</body>
+</html>

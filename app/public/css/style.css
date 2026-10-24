@@ -941,3 +941,656 @@ body {
     font-size: 0.78rem;
     margin-top: 0.25rem;
 }
+
+/* ==========================================================================
+   GIAO DIỆN CHỈNH CHU CAO CẤP: ĐĂNG NHẬP, LÀM BÀI, KẾT QUẢ, LỊCH SỬ
+   ========================================================================== */
+
+/* 1. GIAO DIỆN ĐĂNG NHẬP (AUTH PREMIUM) */
+.auth-academic-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.25rem;
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.35);
+}
+
+.password-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrap .form-control {
+    padding-right: 46px;
+}
+
+.btn-toggle-pwd {
+    position: absolute;
+    right: 8px;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.btn-toggle-pwd:hover {
+    color: #1e293b;
+    background: #f1f5f9;
+}
+
+.btn-primary-gradient {
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.85rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.btn-primary-gradient:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+}
+
+.quick-cred-section {
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed #cbd5e1;
+}
+
+.quick-cred-heading {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin-bottom: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.demo-account-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.demo-account-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0.85rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.demo-account-item:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateX(2px);
+}
+
+.demo-account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.demo-account-role {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.demo-account-email {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-family: Consolas, monospace;
+}
+
+.btn-fill-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.btn-fill-student {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.btn-fill-teacher {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.btn-fill-admin {
+    background: #f3e8ff;
+    color: #7e22ce;
+}
+
+/* 2. GIAO DIỆN LÀM BÀI THI (QUIZ TAKE & TIMER) */
+.quiz-take-wrapper {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 1rem 1rem 4rem;
+}
+
+.quiz-sticky-header {
+    position: sticky;
+    top: 65px;
+    z-index: 90;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.08);
+}
+
+.quiz-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.quiz-title-main {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.quiz-timer-widget {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 0.6rem 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+.timer-clock-icon {
+    width: 20px;
+    height: 20px;
+    color: #38bdf8;
+    animation: pulse 2s infinite;
+}
+
+.timer-digits {
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #38bdf8;
+}
+
+.timer-warning {
+    background: #991b1b !important;
+    animation: timerAlert 1s infinite alternate;
+}
+
+.timer-warning .timer-digits {
+    color: #fef08a !important;
+}
+
+@keyframes timerAlert {
+    from { box-shadow: 0 0 10px rgba(220, 38, 38, 0.5); }
+    to { box-shadow: 0 0 22px rgba(220, 38, 38, 0.9); }
+}
+
+.quiz-progress-section {
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.progress-info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 0.4rem;
+}
+
+.progress-track {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4f46e5, #06b6d4);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+.quiz-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 880px) {
+    .quiz-layout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.question-card-academic {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: var(--transition);
+}
+
+.question-card-academic:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+.question-header-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.q-badge-academic {
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.3rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #c7d2fe;
+}
+
+.q-content-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.5;
+}
+
+.options-list-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.option-radio-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.15rem;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.option-radio-card:hover {
+    border-color: #94a3b8;
+    background: #f8fafc;
+}
+
+.option-radio-card input[type="radio"] {
+    display: none;
+}
+
+.option-letter-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.option-text-desc {
+    font-size: 0.95rem;
+    color: #334155;
+    flex: 1;
+}
+
+.option-radio-card.selected {
+    border-color: #4f46e5;
+    background: #f5f3ff;
+    box-shadow: 0 0 0 1px #4f46e5;
+}
+
+.option-radio-card.selected .option-letter-badge {
+    background: #4f46e5;
+    color: #ffffff;
+}
+
+.option-radio-card.selected .option-text-desc {
+    color: #312e81;
+    font-weight: 600;
+}
+
+/* Thanh điều hướng câu hỏi bên phải (Question Palette) */
+.quiz-palette-card {
+    position: sticky;
+    top: 220px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.palette-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.palette-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.palette-btn {
+    height: 36px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.palette-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.palette-btn.answered {
+    background: #ecfdf5;
+    border-color: #10b981;
+    color: #047857;
+}
+
+.palette-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: #64748b;
+    padding-top: 0.75rem;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+}
+
+.legend-dot.answered { background: #10b981; }
+.legend-dot.unanswered { background: #cbd5e1; }
+
+/* 3. GIAO DIỆN KẾT QUẢ THI (RESULT CARD LUXURY) */
+.result-card-luxury {
+    max-width: 680px;
+    margin: 1.5rem auto 3rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.result-card-subtitle {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6366f1;
+    margin-bottom: 0.4rem;
+}
+
+.result-quiz-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.35rem;
+}
+
+.result-candidate-info {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin-bottom: 1.75rem;
+}
+
+.score-circle-gauge {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 8px solid #10b981;
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.score-circle-gauge.fail {
+    border-color: #ef4444;
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.25);
+}
+
+.gauge-score-number {
+    font-size: 2.75rem;
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1;
+}
+
+.gauge-scale-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    margin-top: 0.25rem;
+}
+
+.result-chip-rank {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1.15rem;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+}
+
+.rank-excellent {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.rank-fail {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.result-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+@media (max-width: 600px) {
+    .result-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.result-stat-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.stat-box-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.stat-box-val {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.result-actions-flex {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* 4. GIAO DIỆN LỊCH SỬ THI (HISTORY DASHBOARD) */
+.history-stats-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .history-stats-banner {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.history-stat-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.15rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.hstat-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.hstat-num {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-top: 0.2rem;
+}
+
+.table-academic {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-academic th {
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.85rem 1.15rem;
+    border-bottom: 1.5px solid #e2e8f0;
+}
+
+.table-academic td {
+    padding: 1rem 1.15rem;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.92rem;
+    vertical-align: middle;
+}
+
+.table-academic tr:hover td {
+    background: #f8fafc;
+}
